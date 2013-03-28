@@ -25,9 +25,6 @@
 	<camelContext xmlns="http://camel.apache.org/schema/spring">
         <route>
             <from uri="jpa://com.danhaywood.camel.subscriber.isispubsubjdo.source.PublishedEvent?consumer.namedQuery=queued&amp;consumeDelete=false"/>
-    		<transform>
-        	  <simple>${body.payload}</simple>
-        	</transform>
             <to uri="stream:out"/>
         </route>
     </camelContext>

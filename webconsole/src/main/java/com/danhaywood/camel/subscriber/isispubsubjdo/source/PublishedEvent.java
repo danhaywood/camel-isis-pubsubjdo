@@ -115,6 +115,6 @@ public class PublishedEvent implements Serializable {
 
 	@Override
 	public String toString() {
-		return getId();
+		return getClass().getName() + ": " + getId();
 	}
 }

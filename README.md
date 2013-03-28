@@ -24,7 +24,7 @@ There are two modules that make up this project:
 
   The JPA entity is also called `PublishedEvent`.
 
-  The Camel route currently just writes to stdout.
+  The Camel route currently just writes the event to stdout.  Eventually this will be changed to call a SOAP web service, to whit:
 
 * cxf-target
 
