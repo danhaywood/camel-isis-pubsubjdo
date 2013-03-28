@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:amq="http://activemq.apache.org/schema/core" xmlns:camel="http://camel.apache.org/schema/spring"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+    ">
+
+	<!-- This creates an embedded ActiveMQ Broker -->
+	<broker xmlns="http://activemq.apache.org/schema/core" useJmx="true"
+		persistent="false">
+		<transportConnectors>
+			<transportConnector uri="tcp://localhost:61616" />
+		</transportConnectors>
+	</broker>
+
+	<bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
+		<property name="brokerURL" value="failover:tcp://localhost:61616" />
+	</bean>
+
+	<camelContext xmlns="http://camel.apache.org/schema/spring">
+        <route>
+            <from uri="jpa://com.danhaywood.camel.subscriber.isispubsubjdo.source.PublishedEvent?consumer.namedQuery=queued&amp;consumeDelete=false"/>
+    		<transform>
+        	  <simple>${body.payload}</simple>
+        	</transform>
+            <to uri="stream:out"/>
+        </route>
+    </camelContext>
+
+	<!-- 
+		<route>
+			<from uri="file:src/data?noop=true" />
+			<convertBodyTo type="String">
+				<description>Print the message to standard out, just as a test</description>
+			</convertBodyTo>
+			<to uri="stream:out" />
+			<to uri="activemq:personnel.records" />
+		</route>
+		<route>
+			<from uri="activemq:personnel.records" />
+			<choice>
+				<when>
+					<xpath>/person/city = 'London'</xpath>
+					<log message="UK message" />
+					<to uri="file:target/messages/uk" />
+				</when>
+				<otherwise>
+					<log message="Other message" />
+					<to uri="file:target/messages/others" />
+				</otherwise>
+			</choice>
+		</route>
+	 -->
+
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="isispubsub" />
+	</bean>
+
+</beans>

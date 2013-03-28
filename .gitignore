@@ -1,3 +1,10 @@
+.project
+.classpath
+.settings/
+target/
+target-ide/
+cxf_samples/
+
 *.class
 
 # Package Files #

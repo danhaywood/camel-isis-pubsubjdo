@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+
+	<persistence-unit name="isispubsub" transaction-type="RESOURCE_LOCAL">
+		<class>com.danhaywood.camel.subscriber.isispubsubjdo.source.PublishedEvent</class>
+		
+		<properties>
+			<property name="openjpa.ConnectionURL" value="jdbc:sqlserver://127.0.0.1:1433;instance=.;databaseName=quickstart"/>
+			<property name="openjpa.ConnectionDriverName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+			<property name="openjpa.ConnectionUserName" value="sa"/>
+			<property name="openjpa.ConnectionPassword" value="p4ssword"/>
+			<property name="openjpa.Log" value="DefaultLevel=WARN, Tool=INFO"/>
+		</properties>
+	</persistence-unit>
+	
+</persistence>
