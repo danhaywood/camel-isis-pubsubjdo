@@ -16,14 +16,24 @@
 	<packaging>war</packaging>
 
 	<dependencies>
-    
         <dependency>
             <groupId>com.danhaywood.camel</groupId>
             <artifactId>danhaywood-camel-isis-pubsubjdo-publisher</artifactId>
         </dependency>
         <dependency>
             <groupId>com.danhaywood.camel</groupId>
+            <artifactId>danhaywood-camel-isis-pubsubjdo-bus</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
+        <dependency>
+            <groupId>com.danhaywood.camel</groupId>
             <artifactId>danhaywood-camel-isis-pubsubjdo-soapsubscriber</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.danhaywood.camel</groupId>
+            <artifactId>danhaywood-camel-isis-pubsubjdo-soapsubscriberstub</artifactId>
+            <scope>test</scope>
         </dependency>
     
 		<dependency>
@@ -33,11 +43,44 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<!-- Dependencies for stream processing in Camel http://camel.apache.org/stream.html -->
-		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-stream</artifactId>
-		</dependency>
+        <!-- Dependencies for using ActiveMQ -->
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-camel</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jms_1.1_spec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.xbean</groupId>
+            <artifactId>xbean-spring</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-jms</artifactId>
+        </dependency>
+
+        <!-- Dependencies for stream processing in Camel http://camel.apache.org/stream.html -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-stream</artifactId>
+        </dependency>
+
+        <!-- Routing, Filtering, Transforming -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-ognl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-jackson</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-cxf</artifactId>
+        </dependency>
 
 		<!-- utilities -->
         <dependency>

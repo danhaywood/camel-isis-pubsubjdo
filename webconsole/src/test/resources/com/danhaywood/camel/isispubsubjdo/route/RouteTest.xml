@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:amq="http://activemq.apache.org/schema/core" xmlns:camel="http://camel.apache.org/schema/spring"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:amq="http://activemq.apache.org/schema/core" xmlns:camel="http://camel.apache.org/schema/spring"
     xmlns:cxf="http://camel.apache.org/schema/cxf"
-	xmlns:p="http://www.springframework.org/schema/p"
-	xsi:schemaLocation="
+    xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd
@@ -13,13 +13,6 @@
        http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd
     ">
 
-    <!--  JPA publisher -->
-    <bean id="entityManagerFactory"
-        class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
-        <property name="persistenceUnitName" value="isispubsub" />
-    </bean>
-
-    <!-- 'Canonical' (bus) format-->
     <bean id="actionInvocationDataFormat" class="com.danhaywood.camel.isispubsubjdo.publisher.dataformat.IsisPubSubPayloadDataFormat">
         <property name="payloadClass">
             <value>com.danhaywood.camel.isispubsubjdo.bus.ActionInvocationPayloadRepr</value>
@@ -30,42 +23,26 @@
             <value>com.danhaywood.camel.isispubsubjdo.bus.ObjectChangedPayloadRepr</value>
         </property>
     </bean>
-
-    <!-- CXF Subscriber -->
-    <bean id="actionInvocationRepr2ToDoItemWebServiceArg0Transformer" 
-        class="com.danhaywood.camel.isispubsubjdo.soapsubscriber.ActionInvocationRepr2ToDoItemWebServiceArg0Transformer"/>
-
-    <cxf:cxfEndpoint id="subscriberEndpoint" address="http://localhost:9090/ToDoItemPort"
-            wsdlURL="ToDoItem.wsdl"
-            serviceClass="org.apache.isis.example.wrj.todoitem.ToDoItem"
-            endpointName="tns:ToDoItemOverSOAP"
-            serviceName="tns:ToDoItemService"
-            xmlns:tns="http://isis.apache.org/example/wrj/ToDoItem/"
-            >
-    </cxf:cxfEndpoint>
-
+    
     <camel:camelContext>
         <camel:route>
-            <camel:from uri="jpa://com.danhaywood.camel.isispubsubjdo.publisher.db.PublishedEvent?consumer.namedQuery=queued&amp;consumeDelete=false"/>
+            <camel:from uri="direct:start" />
             <camel:choice>
                 <camel:when>
-                    <!-- call CXF webservice -->
                     <camel:ognl>request.body.eventType.toString() == 'ACTION_INVOCATION'</camel:ognl>
                     <camel:transform>
                         <camel:simple>${in.body.serializedform}</camel:simple>
                     </camel:transform>
                     <camel:unmarshal ref="actionInvocationDataFormat"/>
-                    <camel:bean ref="actionInvocationRepr2ToDoItemWebServiceArg0Transformer"></camel:bean>
-                    <camel:to uri="cxf:bean:subscriberEndpoint"/>
+                    <camel:to uri="mock:actionInvocationEndpoint" />
                 </camel:when>
                 <camel:when>
-                    <!-- simply write to stdout -->
                     <camel:ognl>request.body.eventType.toString() == 'OBJECT_CHANGED'</camel:ognl>
                     <camel:transform>
                         <camel:simple>${in.body.serializedform}</camel:simple>
                     </camel:transform>
                     <camel:unmarshal ref="objectChangedDataFormat"/>
-                    <camel:to uri="stream:out"/>
+                    <camel:to uri="mock:objectChangedEndpoint" />
                 </camel:when>
             </camel:choice>
         </camel:route>

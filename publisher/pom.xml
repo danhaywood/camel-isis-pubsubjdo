@@ -16,6 +16,11 @@
 
 	<dependencies>
 
+        <dependency>
+        <groupId>com.danhaywood.camel</groupId>
+        <artifactId>danhaywood-camel-isis-pubsubjdo-bus</artifactId>
+        </dependency>
+
 		<!-- JPA -->
 		<dependency>
 			<groupId>org.apache.camel</groupId>
@@ -25,6 +30,18 @@
 			<groupId>org.apache.openjpa</groupId>
 			<artifactId>openjpa</artifactId>
 		</dependency>
+
+        <!-- Isis RO Applib -->
+        <dependency>
+            <groupId>org.apache.isis.viewer</groupId>
+            <artifactId>isis-viewer-restfulobjects-applib</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-jackson</artifactId>
+        </dependency>
+
 
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
@@ -41,6 +58,9 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>openjpa-maven-plugin</artifactId>
 				<version>1.2</version>
+                <configuration>
+                    <includes>**/db/*.class</includes>
+                </configuration>
 				<executions>
 					<execution>
 						<id>enhancer</id>

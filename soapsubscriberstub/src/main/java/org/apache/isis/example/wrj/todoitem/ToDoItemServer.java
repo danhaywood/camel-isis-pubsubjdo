@@ -19,6 +19,8 @@
 
 package org.apache.isis.example.wrj.todoitem;
 
+import java.util.List;
+
 import javax.xml.ws.Endpoint;
 
 import org.apache.cxf.interceptor.LoggingInInterceptor;
@@ -27,11 +29,18 @@ import org.apache.cxf.jaxws.EndpointImpl;
 
 public class ToDoItemServer {
 
-    protected ToDoItemServer() throws Exception {
-        System.out.println("Starting Server");
-        ToDoItem implementor = new ToDoItemImpl();
-        EndpointImpl ep = (EndpointImpl)Endpoint.publish("http://localhost:9090/ToDoItemPort",
-                                                         implementor);
+    private static final int DEFAULT_PORT = 9090;
+    private EndpointImpl ep;
+    private ToDoItemImpl implementor;
+
+    public ToDoItemServer() throws Exception {
+        this(DEFAULT_PORT);
+    }
+
+    public ToDoItemServer(int port) {
+        System.out.println("Starting Server on port " + port);
+        implementor = new ToDoItemImpl();
+        ep = (EndpointImpl)Endpoint.publish("http://localhost:" + port + "/ToDoItemPort", implementor);
 
         // Adding logging for incoming and outgoing messages
         ep.getServer().getEndpoint().getInInterceptors().add(new LoggingInInterceptor());
@@ -41,8 +50,17 @@ public class ToDoItemServer {
     public static void main(String args[]) throws Exception {
         new ToDoItemServer();
         System.out.println("Server ready...");
-        Thread.sleep(5 * 60 * 1000);
-        System.out.println("Server exiting");
-        System.exit(0);
+//        Thread.sleep(5 * 60 * 1000);
+//        System.out.println("Server exiting");
+//        System.exit(0);
+    }
+
+    public void stop() {
+        ep.getServer().stop();
+        ep.getServer().destroy();
+    }
+
+    public List<Object> getCallArgs() {
+        return implementor.getCallArgs();
     }
 }

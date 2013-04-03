@@ -1,0 +1,37 @@
+{
+   "metadata":{
+      "id":"4575b7ad-4023-4279-aa71-1b67926b3d98.1",
+      "transactionId":"4575b7ad-4023-4279-aa71-1b67926b3d98",
+      "sequence":1,
+      "eventType" : "CHANGED_OBJECT",
+      "user":"sven",
+      "timestamp":1364901239824
+   },
+   "payload":{
+      "title":"CHANGED_OBJECT:dom.todo.ToDoItem@715be530",
+      "members":[
+         {
+            "id":"changed",
+            "memberType":"property",
+            "value":{
+               "rel":"urn:org.restfulobjects:rels/object",
+               "href":"http://localhost:8080/restful/objects/TODO:L_11^2:sven:1364901239786",
+               "method":"GET",
+               "type":"application/json;profile=\"urn:org.restfulobjects:repr-types/domainobject\"",
+               "title":"Buy milk  - Completed!"
+            },
+            "disabledReason":"Always disabled"
+         },
+         {
+            "id":"description",
+            "memberType":"property",
+            "value":"Buy milk",
+            "disabledReason":"Always disabled"
+         }
+      ],
+      "extensions":{
+         "isService":false,
+         "isPersistent":false
+      }
+   }
+}

@@ -18,6 +18,9 @@
  */
 package org.apache.isis.example.wrj.todoitem;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.jws.WebParam;
 import javax.xml.ws.WebServiceContext;
@@ -30,15 +33,18 @@ public class ToDoItemImpl implements ToDoItem {
      */
     @Resource
     WebServiceContext wsContext;
+    
+    private List<Object> callArgs;
 
     @Override
-//    @WebResult(name = "out", targetNamespace = "")
-//    @RequestWrapper(localName = "Processed", targetNamespace = "http://isis.apache.org/example/wrj/ToDoItem/", className = "org.apache.isis.example.wrj.todoitem.Processed")
-//    @WebMethod(operationName = "Processed", action = "http://isis.apache.org/example/wrj/ToDoItem/Processed")
-//    @ResponseWrapper(localName = "ProcessedResponse", targetNamespace = "http://isis.apache.org/example/wrj/ToDoItem/", className = "org.apache.isis.example.wrj.todoitem.ProcessedResponse")
     public String processed(@WebParam(name = "in", targetNamespace = "") String in) {
         System.out.println(in);
+        callArgs = Arrays.<Object>asList(in);
         return "OK";
+    }
+
+    public List<Object> getCallArgs() {
+        return callArgs;
     }
 
 }

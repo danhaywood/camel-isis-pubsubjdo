@@ -2,7 +2,7 @@
 <persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
 
 	<persistence-unit name="isispubsub" transaction-type="RESOURCE_LOCAL">
-		<class>com.danhaywood.camel.subscriber.isispubsubjdo.source.PublishedEvent</class>
+		<class>com.danhaywood.camel.isispubsubjdo.publisher.db.PublishedEvent</class>
 		
 		<properties>
 			<property name="openjpa.ConnectionURL" value="jdbc:sqlserver://127.0.0.1:1433;instance=.;databaseName=quickstart"/>

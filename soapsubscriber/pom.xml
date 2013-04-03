@@ -64,15 +64,14 @@
                         <configuration>
                             <wsdlOptions>
                                 <wsdlOption>
-                                <!-- 
-                                    <wsdl>src/main/resources/CustomerService.wsdl</wsdl>
-                                 -->
                                     <wsdl>src/main/resources/ToDoItem.wsdl</wsdl>
                                     <frontEnd>jaxws21</frontEnd>
                                     <faultSerialVersionUID>1</faultSerialVersionUID>
+                                    <!-- 
                                     <bindingFiles>
                                         <bindingFile>src/main/resources/binding.xml</bindingFile>
                                     </bindingFiles>
+                                     -->
                                 </wsdlOption>
                             </wsdlOptions>
                         </configuration>
@@ -99,14 +98,6 @@
                                 <goals>
                                     <goal>java</goal>
                                 </goals>
-                                <!-- 
-                                <configuration>
-                                    <mainClass>com.example.customerservice.client.CustomerServiceClient</mainClass>
-                                    <arguments>
-                                        <argument>src/main/resources/CustomerService.wsdl</argument>
-                                    </arguments>
-                                </configuration>
-                                 -->
                                 <configuration>
                                     <mainClass>org.apache.isis.example.wrj.todoitem.ToDoItemClient</mainClass>
                                     <arguments>
@@ -122,6 +113,10 @@
     </profiles>
 
     <dependencies>
+        <dependency>
+            <groupId>com.danhaywood.camel</groupId>
+            <artifactId>danhaywood-camel-isis-pubsubjdo-bus</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-rt-frontend-jaxws</artifactId>
