@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://isis.apache.org/example/wrj/ToDoItem/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="ToDoItem" targetNamespace="http://isis.apache.org/example/wrj/ToDoItem/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://isis.apache.org/example/wrj/ToDoItem/">
+      <xsd:element name="Processed">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="in" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="ProcessedResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="out" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ProcessedRequest">
+    <wsdl:part element="tns:Processed" name="parameters"/>
+  </wsdl:message>
+  <wsdl:message name="ProcessedResponse">
+    <wsdl:part element="tns:ProcessedResponse" name="parameters"/>
+  </wsdl:message>
+  <wsdl:portType name="ToDoItem">
+    <wsdl:operation name="Processed">
+      <wsdl:input message="tns:ProcessedRequest"/>
+      <wsdl:output message="tns:ProcessedResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="ToDoItemSOAP" type="tns:ToDoItem">
+      <soap:binding style="document"
+          transport="http://schemas.xmlsoap.org/soap/http" />
+      <wsdl:operation name="Processed">
+          <soap:operation
+              soapAction="http://isis.apache.org/example/wrj/ToDoItem/Processed" />
+          <wsdl:input>
+              <soap:body use="literal" />
+          </wsdl:input>
+          <wsdl:output>
+              <soap:body use="literal" />
+          </wsdl:output>
+      </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="ToDoItemService">
+    <wsdl:port binding="tns:ToDoItemSOAP" name="ToDoItemOverSOAP">
+      <soap:address location="http://localhost:9090/ToDoItemPort"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

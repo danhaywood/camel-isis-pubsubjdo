@@ -4,145 +4,79 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.danhaywood.camel</groupId>
-	<artifactId>danhaywood-camel-subscriber-isis-pubsubjdo-webconsole</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+    <parent>
+        <groupId>com.danhaywood.camel</groupId>
+        <artifactId>danhaywood-camel-isis-pubsubjdo</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
 
-	<name>Camel Web Console Application</name>
-	<description>Camel project that deploys the Camel Web Console, REST API, and your routes as a WAR</description>
-	<url>http://www.myorganization.org</url>
+	<artifactId>danhaywood-camel-isis-pubsubjdo-webconsole</artifactId>
+	<name>Camel for Isis PubSubJdo Web Console</name>
 
 	<packaging>war</packaging>
 
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-	</properties>
-
 	<dependencies>
+    
+        <dependency>
+            <groupId>com.danhaywood.camel</groupId>
+            <artifactId>danhaywood-camel-isis-pubsubjdo-publisher</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.danhaywood.camel</groupId>
+            <artifactId>danhaywood-camel-isis-pubsubjdo-soapsubscriber</artifactId>
+        </dependency>
+    
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-web</artifactId>
-			<version>2.10.4</version>
 			<type>war</type>
 			<scope>runtime</scope>
-		</dependency>
-
-		<!-- Dependencies for using ActiveMQ -->
-		<dependency>
-			<groupId>org.apache.activemq</groupId>
-			<artifactId>activemq-camel</artifactId>
-			<version>5.7.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.geronimo.specs</groupId>
-			<artifactId>geronimo-jms_1.1_spec</artifactId>
-			<version>1.1.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.xbean</groupId>
-			<artifactId>xbean-spring</artifactId>
-			<version>3.12</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-jms</artifactId>
-			<version>2.10.4</version>
 		</dependency>
 
 		<!-- Dependencies for stream processing in Camel http://camel.apache.org/stream.html -->
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-stream</artifactId>
-			<version>2.10.4</version>
 		</dependency>
+
+		<!-- utilities -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
 
 		<!-- logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.6.6</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.6.6</version>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
 		</dependency>
 
-		<!-- testing -->
-		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-test-spring</artifactId>
-			<version>2.10.4</version>
-			<scope>test</scope>
-		</dependency>
-
-
-		<!-- JPA -->
-		<dependency>
-			<groupId>org.apache.camel</groupId>
-			<artifactId>camel-jpa</artifactId>
-			<version>2.10.4</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.openjpa</groupId>
-			<artifactId>openjpa</artifactId>
-			<version>2.2.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.microsoft.sqlserver</groupId>
-			<artifactId>jdbc</artifactId>
-			<version>4.0</version>
-		</dependency>
-
+        <!-- Dependencies for tests Camel http://camel.apache.org/testing.html and http://camel.apache.org/spring-testing.html -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-test-spring</artifactId>
+            <scope>test</scope>
+        </dependency>
 
 	</dependencies>
 
 	<build>
-		<defaultGoal>install</defaultGoal>
+		<defaultGoal>package</defaultGoal>
 
 		<plugins>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.5.1</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.4.3</version>
-				<configuration>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
-
-
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>openjpa-maven-plugin</artifactId>
-				<version>1.2</version>
-				<executions>
-					<execution>
-						<id>enhancer</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>enhance</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
 
 			<!-- plugin to run using mvn jetty:run -->
 			<plugin>
@@ -170,46 +104,7 @@
 					</connectors>
 				</configuration>
 			</plugin>
-
 		</plugins>
-
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings 
-					only. It has no influence on the Maven build itself. -->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											org.codehaus.mojo
-										</groupId>
-										<artifactId>
-											openjpa-maven-plugin
-										</artifactId>
-										<versionRange>
-											[1.2,)
-										</versionRange>
-										<goals>
-											<goal>enhance</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 	</build>
-
 
 </project>

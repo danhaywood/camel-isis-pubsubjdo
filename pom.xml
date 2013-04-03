@@ -15,18 +15,27 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.danhaywood.camel</groupId>
-    <artifactId>danhaywood-camel-subscriber-isis-pubsubjdo</artifactId>
+    <artifactId>danhaywood-camel-isis-pubsubjdo</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Camel Subscriber for Isis PubSubJdo</name>
+    <name>Camel for Isis PubSubJdo</name>
 
     <properties>
-        <isis.version>1.1.0</isis.version>
-        <isis-viewer-wicket.version>1.1.0</isis-viewer-wicket.version>
-        <wicketstuff-gmap3.version>6.0-SNAPSHOT</wicketstuff-gmap3.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
         <compileSource>1.6</compileSource>
         <compileTarget>1.6</compileTarget>
+
+        <camel.version>2.10.4</camel.version>
+        <slf4j.version>1.6.6</slf4j.version>
+
+        <openjpa.version>2.2.1</openjpa.version>
+
+        <cxf.version>2.7.3</cxf.version>
+        <cxf.xjc-utils.version>2.6.0</cxf.xjc-utils.version>
+
     </properties>
 
     <build>
@@ -50,40 +59,48 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>2.3.1</version>
+                    <version>2.5.1</version>
                     <configuration>
-                        <showDeprecation>false</showDeprecation>
-                        <showWarnings>false</showWarnings>
                         <source>${compileSource}</source>
                         <target>${compileTarget}</target>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.4.3</version>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                    </configuration>
+                </plugin>
+
             </plugins>
         </pluginManagement>
     </build>
 
-    <repositories>
-        <repository>
-            <id>wicketstuff-core-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
     <dependencyManagement>
         <dependencies>
 
-            <!-- also for benefit of application developers, using scope=import, type=pom -->
+            <!-- also for benefit of application developers, using scope=import, 
+                type=pom -->
             <dependency>
                 <groupId>com.danhaywood.camel</groupId>
-                <artifactId>danhaywood-camel-subscriber-isis-pubsubjdo-cxf-target</artifactId>
+                <artifactId>danhaywood-camel-isis-pubsubjdo-publisher</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>com.danhaywood.camel</groupId>
-                <artifactId>danhaywood-camel-subscriber-isis-pubsubjdo-webconsole</artifactId>
+                <artifactId>danhaywood-camel-isis-pubsubjdo-soapsubscriber</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.danhaywood.camel</groupId>
+                <artifactId>danhaywood-camel-isis-pubsubjdo-soapsubscriberstub</artifactId>
+                <version>1.0.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.danhaywood.camel</groupId>
+                <artifactId>danhaywood-camel-isis-pubsubjdo-webconsole</artifactId>
                 <version>1.0.0-SNAPSHOT</version>
             </dependency>
 
@@ -101,12 +118,147 @@
                 <scope>test</scope>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-web</artifactId>
+                <version>${camel.version}</version>
+                <type>war</type>
+                <scope>runtime</scope>
+            </dependency>
+
+            <!-- Dependencies for using ActiveMQ -->
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-camel</artifactId>
+                <version>5.7.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-jms_1.1_spec</artifactId>
+                <version>1.1.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.xbean</groupId>
+                <artifactId>xbean-spring</artifactId>
+                <version>3.12</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-jms</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+
+            <!-- Dependencies for stream processing in Camel http://camel.apache.org/stream.html -->
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-stream</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+
+            <!-- utilities -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>13.0.1</version>
+            </dependency>
+
+            <!-- logging -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>log4j</groupId>
+                <artifactId>log4j</artifactId>
+                <version>1.2.17</version>
+            </dependency>
+
+            <!-- Dependencies for tests Camel http://camel.apache.org/testing.html 
+                and http://camel.apache.org/spring-testing.html -->
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-test</artifactId>
+                <version>${camel.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-test-spring</artifactId>
+                <version>${camel.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+
+            <!-- JPA -->
+            <dependency>
+                <groupId>org.apache.camel</groupId>
+                <artifactId>camel-jpa</artifactId>
+                <version>${camel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.openjpa</groupId>
+                <artifactId>openjpa</artifactId>
+                <version>${openjpa.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.microsoft.sqlserver</groupId>
+                <artifactId>jdbc</artifactId>
+                <version>4.0</version>
+            </dependency>
+
+            <!-- CXF -->
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-transports-http-jetty</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-transports-http</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.cxf.xjc-utils</groupId>
+                <artifactId>cxf-xjc-runtime</artifactId>
+                <version>${cxf.xjc-utils.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-web</artifactId>
+                <version>3.0.7.RELEASE</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
     <modules>
+        <module>publisher</module>
+        <module>soapsubscriber</module>
+        <module>soapsubscriberstub</module>
         <module>webconsole</module>
-        <module>cxf-target</module>
     </modules>
 
     <profiles>
@@ -122,7 +274,6 @@
             </build>
         </profile>
     </profiles>
-
 
 
 </project>
