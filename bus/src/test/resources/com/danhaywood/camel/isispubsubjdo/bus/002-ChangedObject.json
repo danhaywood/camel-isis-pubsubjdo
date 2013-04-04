@@ -23,6 +23,12 @@
             "disabledReason":"Always disabled"
          },
          {
+           "id" : "className",
+           "memberType" : "property",
+           "value" : "dom.todo.ToDoItem",
+           "disabledReason" : "Always disabled"
+         },
+         {
             "id":"description",
             "memberType":"property",
             "value":"Buy milk",

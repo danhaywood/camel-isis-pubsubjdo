@@ -5,24 +5,34 @@ import static org.hamcrest.CoreMatchers.is;
 
 import com.danhaywood.camel.isispubsubjdo.bus.ActionInvocationPayloadRepr;
 import com.danhaywood.camel.isispubsubjdo.bus.ExamplePayloads;
-import com.danhaywood.camel.isispubsubjdo.publisher.dataformat.PublishedEventSerializedFormRepr;
+import com.danhaywood.camel.isispubsubjdo.publisher.canonicalize.PublishedEventSerializedFormRepr;
+import com.danhaywood.testsupport.jmock.JUnitRuleMockery2;
+import com.danhaywood.testsupport.jmock.JUnitRuleMockery2.Mode;
 
 import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.test.junit4.CamelSpringTestSupport;
+import org.jmock.Expectations;
+import org.jmock.auto.Mock;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 
+import org.apache.isis.example.wrj.todoitem.ToDoItem;
+import org.apache.isis.example.wrj.todoitem.ToDoItemDelegating;
 import org.apache.isis.example.wrj.todoitem.ToDoItemServer;
 import org.apache.isis.viewer.restfulobjects.applib.JsonRepresentation;
 
 @ContextConfiguration
 public class InvokeWebServiceTest extends CamelSpringTestSupport {
+
+    @Rule
+    public JUnitRuleMockery2 context = JUnitRuleMockery2.createFor(Mode.INTERFACES_AND_CLASSES);
 
     @Override
     protected AbstractApplicationContext createApplicationContext() {
@@ -38,10 +48,13 @@ public class InvokeWebServiceTest extends CamelSpringTestSupport {
 
     private ActionInvocationPayloadRepr repr;
 
+    @Mock
+    private ToDoItem mockImplementor;
+
     
     @Before
     public void startWebService() throws Exception {
-        toDoItemServer = new ToDoItemServer(9191);
+        toDoItemServer = new ToDoItemServer(9191, new ToDoItemDelegating(mockImplementor));
     }
     
     @Before
@@ -59,13 +72,16 @@ public class InvokeWebServiceTest extends CamelSpringTestSupport {
     @DirtiesContext
     @Test
     public void callsWebService() throws Exception {
-
-        template.sendBody(repr);
-
-        JsonRepresentation targetProperty = repr.getProperty("target");
-        Object targetHref = targetProperty.getString("value.href");
         
-        assertThat(toDoItemServer.getCallArgs().get(0), is(targetHref));
+        final JsonRepresentation targetProperty = repr.getProperty("target");
+        final String targetHref = targetProperty.getString("value.href");
+
+        context.checking(new Expectations() {
+            {
+                oneOf(mockImplementor).processed(targetHref);
+            }
+        });
+        template.sendBody(repr);
     }
 
 }

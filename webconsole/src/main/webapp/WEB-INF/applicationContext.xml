@@ -19,18 +19,8 @@
         <property name="persistenceUnitName" value="isispubsub" />
     </bean>
 
-    <!-- 'Canonical' (bus) format-->
-    <bean id="actionInvocationDataFormat" class="com.danhaywood.camel.isispubsubjdo.publisher.dataformat.IsisPubSubPayloadDataFormat">
-        <property name="payloadClass">
-            <value>com.danhaywood.camel.isispubsubjdo.bus.ActionInvocationPayloadRepr</value>
-        </property>
-    </bean>
-    <bean id="objectChangedDataFormat" class="com.danhaywood.camel.isispubsubjdo.publisher.dataformat.IsisPubSubPayloadDataFormat">
-        <property name="payloadClass">
-            <value>com.danhaywood.camel.isispubsubjdo.bus.ObjectChangedPayloadRepr</value>
-        </property>
-    </bean>
-
+    <bean id="isisCanonicalize" class="com.danhaywood.camel.isispubsubjdo.publisher.canonicalize.IsisPubSubCanonicalizer"/>
+    
     <!-- CXF Subscriber -->
     <bean id="actionInvocationRepr2ToDoItemWebServiceArg0Transformer" 
         class="com.danhaywood.camel.isispubsubjdo.soapsubscriber.ActionInvocationRepr2ToDoItemWebServiceArg0Transformer"/>
@@ -40,31 +30,23 @@
             serviceClass="org.apache.isis.example.wrj.todoitem.ToDoItem"
             endpointName="tns:ToDoItemOverSOAP"
             serviceName="tns:ToDoItemService"
-            xmlns:tns="http://isis.apache.org/example/wrj/ToDoItem/"
-            >
+            xmlns:tns="http://isis.apache.org/example/wrj/ToDoItem/">
     </cxf:cxfEndpoint>
 
     <camel:camelContext>
         <camel:route>
             <camel:from uri="jpa://com.danhaywood.camel.isispubsubjdo.publisher.db.PublishedEvent?consumer.namedQuery=queued&amp;consumeDelete=false"/>
+            <camel:process ref="isisCanonicalize"/>
             <camel:choice>
                 <camel:when>
                     <!-- call CXF webservice -->
-                    <camel:ognl>request.body.eventType.toString() == 'ACTION_INVOCATION'</camel:ognl>
-                    <camel:transform>
-                        <camel:simple>${in.body.serializedform}</camel:simple>
-                    </camel:transform>
-                    <camel:unmarshal ref="actionInvocationDataFormat"/>
+                    <camel:simple>${header.isisExtendedEventType} == 'ACTION_INVOCATION;dom.todo.ToDoItem#completed()'</camel:simple>
                     <camel:bean ref="actionInvocationRepr2ToDoItemWebServiceArg0Transformer"></camel:bean>
                     <camel:to uri="cxf:bean:subscriberEndpoint"/>
                 </camel:when>
                 <camel:when>
                     <!-- simply write to stdout -->
-                    <camel:ognl>request.body.eventType.toString() == 'OBJECT_CHANGED'</camel:ognl>
-                    <camel:transform>
-                        <camel:simple>${in.body.serializedform}</camel:simple>
-                    </camel:transform>
-                    <camel:unmarshal ref="objectChangedDataFormat"/>
+                    <camel:simple>${header.isisExtendedEventType} == 'OBJECT_CHANGED;dom.todo.ToDoItem'</camel:simple>
                     <camel:to uri="stream:out"/>
                 </camel:when>
             </camel:choice>

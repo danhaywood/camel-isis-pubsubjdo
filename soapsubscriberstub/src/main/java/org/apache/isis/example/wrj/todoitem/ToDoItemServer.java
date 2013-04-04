@@ -19,8 +19,6 @@
 
 package org.apache.isis.example.wrj.todoitem;
 
-import java.util.List;
-
 import javax.xml.ws.Endpoint;
 
 import org.apache.cxf.interceptor.LoggingInInterceptor;
@@ -31,15 +29,13 @@ public class ToDoItemServer {
 
     private static final int DEFAULT_PORT = 9090;
     private EndpointImpl ep;
-    private ToDoItemImpl implementor;
 
     public ToDoItemServer() throws Exception {
-        this(DEFAULT_PORT);
+        this(DEFAULT_PORT, new ToDoItemImpl());
     }
 
-    public ToDoItemServer(int port) {
+    public ToDoItemServer(int port, final ToDoItem implementor) {
         System.out.println("Starting Server on port " + port);
-        implementor = new ToDoItemImpl();
         ep = (EndpointImpl)Endpoint.publish("http://localhost:" + port + "/ToDoItemPort", implementor);
 
         // Adding logging for incoming and outgoing messages
@@ -60,7 +56,4 @@ public class ToDoItemServer {
         ep.getServer().destroy();
     }
 
-    public List<Object> getCallArgs() {
-        return implementor.getCallArgs();
-    }
 }

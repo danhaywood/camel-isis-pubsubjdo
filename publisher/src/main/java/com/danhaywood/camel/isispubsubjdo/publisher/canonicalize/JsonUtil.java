@@ -1,12 +1,12 @@
-package com.danhaywood.camel.isispubsubjdo.publisher.util;
+package com.danhaywood.camel.isispubsubjdo.publisher.canonicalize;
 
 import org.codehaus.jackson.JsonNode;
 
 import org.apache.isis.viewer.restfulobjects.applib.util.JsonMapper;
 
-public class Util {
+public class JsonUtil {
     
-    private Util(){}
+    private JsonUtil(){}
 
     public static JsonNode asJsonNode(String json)  {
         try {

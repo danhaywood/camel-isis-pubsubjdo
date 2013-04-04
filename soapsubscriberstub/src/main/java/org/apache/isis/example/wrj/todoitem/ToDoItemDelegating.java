@@ -18,15 +18,31 @@
  */
 package org.apache.isis.example.wrj.todoitem;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import javax.annotation.Resource;
+import javax.jws.WebParam;
+import javax.xml.ws.WebServiceContext;
 
-public class ToDoItemSpringServer {
+/**
+ * Intended to wrap a mock implementation.
+ */
+public class ToDoItemDelegating implements ToDoItem {
     
-    protected ToDoItemSpringServer() {
+    /**
+     * The WebServiceContext can be used to retrieve special attributes like the 
+     * user principal. Normally it is not needed
+     */
+    @Resource
+    WebServiceContext wsContext;
+
+    private final ToDoItem delegate;
+    
+    public ToDoItemDelegating(ToDoItem delegate) {
+        this.delegate = delegate;
     }
 
-    public static void main(String args[]) throws Exception {
-        new ClassPathXmlApplicationContext("server-applicationContext.xml");
-        System.in.read();
+    @Override
+    public String processed(@WebParam(name = "in", targetNamespace = "") String in) {
+        return delegate.processed(in);
     }
+
 }

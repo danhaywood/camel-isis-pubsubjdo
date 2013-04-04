@@ -15,9 +15,7 @@ import org.apache.camel.Produce;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.test.junit4.CamelSpringTestSupport;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -99,6 +97,22 @@ public class RouteTest extends CamelSpringTestSupport {
         String targetHref = targetProperty.getString("value.href");
         
         assertThat(targetHref, is("http://localhost:8080/restful/objects/TODO:L_11^2:sven:1364901239786"));
+    }
+
+    @DirtiesContext
+    @Test
+    public void ignoresRouteToActionInvocationNotMatched() throws Exception {
+
+        publishedEvent.setEventType(EventType.ACTION_INVOCATION);
+        publishedEvent.setSerializedform(ExamplePayloads._003);
+        
+        actionInvocationEndpoint.expectedMessageCount(0);
+        objectChangedEndpoint.expectedMessageCount(0);
+        
+        template.sendBody(publishedEvent);
+
+        actionInvocationEndpoint.assertIsSatisfied();
+        objectChangedEndpoint.assertIsSatisfied();
     }
 
 }

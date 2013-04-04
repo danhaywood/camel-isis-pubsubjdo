@@ -13,35 +13,19 @@
        http://camel.apache.org/schema/cxf http://camel.apache.org/schema/cxf/camel-cxf.xsd
     ">
 
-    <bean id="actionInvocationDataFormat" class="com.danhaywood.camel.isispubsubjdo.publisher.dataformat.IsisPubSubPayloadDataFormat">
-        <property name="payloadClass">
-            <value>com.danhaywood.camel.isispubsubjdo.bus.ActionInvocationPayloadRepr</value>
-        </property>
-    </bean>
-    <bean id="objectChangedDataFormat" class="com.danhaywood.camel.isispubsubjdo.publisher.dataformat.IsisPubSubPayloadDataFormat">
-        <property name="payloadClass">
-            <value>com.danhaywood.camel.isispubsubjdo.bus.ObjectChangedPayloadRepr</value>
-        </property>
-    </bean>
+    <bean id="isisCanonicalize" class="com.danhaywood.camel.isispubsubjdo.publisher.canonicalize.IsisPubSubCanonicalizer"/>
     
     <camel:camelContext>
         <camel:route>
             <camel:from uri="direct:start" />
+            <camel:process ref="isisCanonicalize"/>
             <camel:choice>
                 <camel:when>
-                    <camel:ognl>request.body.eventType.toString() == 'ACTION_INVOCATION'</camel:ognl>
-                    <camel:transform>
-                        <camel:simple>${in.body.serializedform}</camel:simple>
-                    </camel:transform>
-                    <camel:unmarshal ref="actionInvocationDataFormat"/>
+                    <camel:simple>${header.isisExtendedEventType} == 'ACTION_INVOCATION;dom.todo.ToDoItem#completed()'</camel:simple>
                     <camel:to uri="mock:actionInvocationEndpoint" />
                 </camel:when>
                 <camel:when>
-                    <camel:ognl>request.body.eventType.toString() == 'OBJECT_CHANGED'</camel:ognl>
-                    <camel:transform>
-                        <camel:simple>${in.body.serializedform}</camel:simple>
-                    </camel:transform>
-                    <camel:unmarshal ref="objectChangedDataFormat"/>
+                    <camel:simple>${header.isisExtendedEventType} == 'OBJECT_CHANGED;dom.todo.ToDoItem'</camel:simple>
                     <camel:to uri="mock:objectChangedEndpoint" />
                 </camel:when>
             </camel:choice>

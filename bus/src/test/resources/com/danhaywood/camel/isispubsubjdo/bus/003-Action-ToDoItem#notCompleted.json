@@ -1,0 +1,49 @@
+{
+   "metadata":{
+      "id":"4575b7ad-4023-4279-aa71-1b67926b3d98.0",
+      "transactionId":"4575b7ad-4023-4279-aa71-1b67926b3d98",
+      "sequence":0,
+      "eventType" : "ACTION_INVOCATION",
+      "user":"sven",
+      "timestamp":1364901239824
+   },
+   "payload":{
+      "title":"ACTION:dom.todo.ToDoItem#notCompleted()\n    target=TODO:L_11^2:sven:1364901239786\n      args=[\n      ]\n    result=TODO:L_11^2:sven:1364901239786",
+      "members":[
+         {
+            "id":"actionName",
+            "memberType":"property",
+            "value":"dom.todo.ToDoItem#notCompleted()",
+            "disabledReason":"Always disabled"
+         },
+         {
+            "id":"result",
+            "memberType":"property",
+            "value":{
+               "rel":"urn:org.restfulobjects:rels/object",
+               "href":"http://localhost:8080/restful/objects/TODO:L_11^2:sven:1364901239786",
+               "method":"GET",
+               "type":"application/json;profile=\"urn:org.restfulobjects:repr-types/domainobject\"",
+               "title":"Buy milk  - Completed!"
+            },
+            "disabledReason":"Always disabled"
+         },
+         {
+            "id":"target",
+            "memberType":"property",
+            "value":{
+               "rel":"urn:org.restfulobjects:rels/object",
+               "href":"http://localhost:8080/restful/objects/TODO:L_11^2:sven:1364901239786",
+               "method":"GET",
+               "type":"application/json;profile=\"urn:org.restfulobjects:repr-types/domainobject\"",
+               "title":"Buy milk  - Completed!"
+            },
+            "disabledReason":"Always disabled"
+         }
+      ],
+      "extensions":{
+         "isService":false,
+         "isPersistent":false
+      }
+   }
+}

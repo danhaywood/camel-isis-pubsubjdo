@@ -17,8 +17,14 @@
 	<dependencies>
 
         <dependency>
-        <groupId>com.danhaywood.camel</groupId>
-        <artifactId>danhaywood-camel-isis-pubsubjdo-bus</artifactId>
+            <groupId>com.danhaywood.camel</groupId>
+            <artifactId>danhaywood-camel-isis-pubsubjdo-bus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.danhaywood.camel</groupId>
+            <artifactId>danhaywood-camel-isis-pubsubjdo-bus</artifactId>
+            <scope>test</scope>
+            <type>test-jar</type>
         </dependency>
 
 		<!-- JPA -->
@@ -47,6 +53,17 @@
 			<groupId>com.microsoft.sqlserver</groupId>
 			<artifactId>jdbc</artifactId>
 		</dependency>
+
+        <dependency>
+            <groupId>com.danhaywood.java</groupId>
+            <artifactId>danhaywood-java-testsupport</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.picocontainer</groupId>
+            <artifactId>picocontainer</artifactId>
+            <scope>test</scope>
+        </dependency>
 
 	</dependencies>
 
