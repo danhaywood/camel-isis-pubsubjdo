@@ -46,7 +46,17 @@
                 </camel:when>
                 <camel:when>
                     <!-- simply write to stdout -->
-                    <camel:simple>${header.isisExtendedEventType} == 'OBJECT_CHANGED;dom.todo.ToDoItem'</camel:simple>
+                    <camel:simple>${header.isisExtendedEventType} == 'OBJECT_CREATED;dom.todo.ToDoItem'</camel:simple>
+                    <camel:to uri="stream:out"/>
+                </camel:when>
+                <camel:when>
+                    <!-- simply write to stdout -->
+                    <camel:simple>${header.isisExtendedEventType} == 'OBJECT_UPDATED;dom.todo.ToDoItem'</camel:simple>
+                    <camel:to uri="stream:out"/>
+                </camel:when>
+                <camel:when>
+                    <!-- simply write to stdout -->
+                    <camel:simple>${header.isisExtendedEventType} == 'OBJECT_DELETED;dom.todo.ToDoItem'</camel:simple>
                     <camel:to uri="stream:out"/>
                 </camel:when>
             </camel:choice>

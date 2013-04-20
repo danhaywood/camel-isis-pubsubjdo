@@ -35,8 +35,14 @@ public class RouteTest extends CamelSpringTestSupport {
     @EndpointInject(uri = "mock:actionInvocationEndpoint")
     protected MockEndpoint actionInvocationEndpoint;
 
-    @EndpointInject(uri = "mock:objectChangedEndpoint")
-    protected MockEndpoint objectChangedEndpoint;
+    @EndpointInject(uri = "mock:objectCreatedEndpoint")
+    protected MockEndpoint objectCreatedEndpoint;
+
+    @EndpointInject(uri = "mock:objectUpdatedEndpoint")
+    protected MockEndpoint objectUpdatedEndpoint;
+
+    @EndpointInject(uri = "mock:objectDeletedEndpoint")
+    protected MockEndpoint objectDeletedEndpoint;
 
     @Produce(uri = "direct:start")
     protected ProducerTemplate template;
@@ -60,12 +66,14 @@ public class RouteTest extends CamelSpringTestSupport {
         publishedEvent.setSerializedform(ExamplePayloads._001);
         
         actionInvocationEndpoint.expectedMessageCount(1);
-        objectChangedEndpoint.expectedMessageCount(0);
+        objectCreatedEndpoint.expectedMessageCount(0);
+        objectUpdatedEndpoint.expectedMessageCount(0);
+        objectDeletedEndpoint.expectedMessageCount(0);
         
         template.sendBody(publishedEvent);
 
         actionInvocationEndpoint.assertIsSatisfied();
-        objectChangedEndpoint.assertIsSatisfied();
+        objectUpdatedEndpoint.assertIsSatisfied();
 
         Exchange exchange = actionInvocationEndpoint.getReceivedExchanges().get(0);
         ActionInvocationPayloadRepr repr = exchange.getIn().getBody(ActionInvocationPayloadRepr.class);
@@ -78,20 +86,23 @@ public class RouteTest extends CamelSpringTestSupport {
     
     @DirtiesContext
     @Test
-    public void routeToObjectChanged() throws Exception {
+    public void routeToObjectUpdated() throws Exception {
 
-        publishedEvent.setEventType(EventType.OBJECT_CHANGED);
+        publishedEvent.setEventType(EventType.OBJECT_UPDATED);
         publishedEvent.setSerializedform(ExamplePayloads._002);
         
         actionInvocationEndpoint.expectedMessageCount(0);
-        objectChangedEndpoint.expectedMessageCount(1);
+        objectCreatedEndpoint.expectedMessageCount(0);
+        objectUpdatedEndpoint.expectedMessageCount(1); // 1 here
+        objectDeletedEndpoint.expectedMessageCount(0);
+
         
         template.sendBody(publishedEvent);
 
         actionInvocationEndpoint.assertIsSatisfied();
-        objectChangedEndpoint.assertIsSatisfied();
+        objectUpdatedEndpoint.assertIsSatisfied();
 
-        Exchange exchange = objectChangedEndpoint.getReceivedExchanges().get(0);
+        Exchange exchange = objectUpdatedEndpoint.getReceivedExchanges().get(0);
         ObjectChangedPayloadRepr repr = exchange.getIn().getBody(ObjectChangedPayloadRepr.class);
         JsonRepresentation targetProperty = repr.getProperty("changed");
         String targetHref = targetProperty.getString("value.href");
@@ -107,12 +118,14 @@ public class RouteTest extends CamelSpringTestSupport {
         publishedEvent.setSerializedform(ExamplePayloads._003);
         
         actionInvocationEndpoint.expectedMessageCount(0);
-        objectChangedEndpoint.expectedMessageCount(0);
+        objectCreatedEndpoint.expectedMessageCount(0);
+        objectUpdatedEndpoint.expectedMessageCount(0);
+        objectDeletedEndpoint.expectedMessageCount(0);
         
         template.sendBody(publishedEvent);
 
         actionInvocationEndpoint.assertIsSatisfied();
-        objectChangedEndpoint.assertIsSatisfied();
+        objectUpdatedEndpoint.assertIsSatisfied();
     }
 
 }

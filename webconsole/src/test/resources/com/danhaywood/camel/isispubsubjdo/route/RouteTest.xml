@@ -25,8 +25,16 @@
                     <camel:to uri="mock:actionInvocationEndpoint" />
                 </camel:when>
                 <camel:when>
-                    <camel:simple>${header.isisExtendedEventType} == 'OBJECT_CHANGED;dom.todo.ToDoItem'</camel:simple>
-                    <camel:to uri="mock:objectChangedEndpoint" />
+                    <camel:simple>${header.isisExtendedEventType} == 'OBJECT_CREATED;dom.todo.ToDoItem'</camel:simple>
+                    <camel:to uri="mock:objectCreatedEndpoint" />
+                </camel:when>
+                <camel:when>
+                    <camel:simple>${header.isisExtendedEventType} == 'OBJECT_UPDATED;dom.todo.ToDoItem'</camel:simple>
+                    <camel:to uri="mock:objectUpdatedEndpoint" />
+                </camel:when>
+                <camel:when>
+                    <camel:simple>${header.isisExtendedEventType} == 'OBJECT_DELETED;dom.todo.ToDoItem'</camel:simple>
+                    <camel:to uri="mock:objectDeletedEndpoint" />
                 </camel:when>
             </camel:choice>
         </camel:route>

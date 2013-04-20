@@ -16,20 +16,20 @@ The different responsibilities have been factored out into separate modules, so 
 
 There are five modules that make up this project.  Four constitute production code, one is intended for testing):
 
+  
 * bus
 
-  This defines some very simple classes that represent the canonical format of
-  the published events.  These classes - `ActionInvocationPayloadRepr` and
-  `ObjectChangedPayloadRepr` - are subclasses of the `DomainObjectRepresentation` provided by the Restful Objects viewers' applib; basically wrappers around the
+  This defines some very simple classes that convert the published event `PublishedEventSerializedFormRepr` and its headers) into a canonical format for other consumers.  It defines two such classes - `ActionInvocationPayloadRepr` and `ObjectChangedPayloadRepr`, - are subclasses of the `DomainObjectRepresentation` provided by the Restful Objects viewers' applib; basically just wrappers around the
   JSON format.  Subscribers can easily reach into these JSON structures to 
   inspect the data that they require.
-  
+
+  `ActionInvocationPayloadRepr` corresponds to events whose event type is `ACTION_INVOCATION`, while `ObjectChangedPayloadRepr` corresponds to events whose event type is any of `OBJECT_CREATED`, `OBJECT_UPDATED` or `OBJECT_DELETED`.
+
 * publisher
 
   This module defines a class to act as a JPA endpoint acting as a producer (ie polling for events from the SQL Server `PUBLISHEDEVENT` table).  The JPA entity is also called `PublishedEvent`.
 
-  The module also provides the Camel `DataFormat` classes to convert into the
-  canonical formats defined in the `bus` module.
+  The module also provides `IsisPubSubCanonicalizer` - a Camel processor that converts the `PublishedEvent` into an message on the Camel pipeline whose headers correspond to the properties of the `PublishedEvent`.  The body is an instance of either `ActionInvocationPayloadRepr` or `ObjectChangedPayloadRepr` (as defined by the bus module), corresponding to the JSON taken from the `PublishedEvent`'s `serializedForm` property.
 
 * soapsubscriber
 
@@ -85,5 +85,5 @@ To run the `webconsole`, just use
 Note that this cannot (easily) be run from the IDE because of the OpenJPA enhancement process that is required.
 
 
-If you run up Isis with the ToDo quickstart app, then any ACTION_INVOCATION events (eg invoking the `complete()` action on a `ToDoItem`) should be routed through the webservice (and the href of the target of the event will appear in the console of the `soapsubscriberstub`) whereas any OBJECT_CHANGED events will be printed to the console of the `webconsole`.
+If you run up Isis with the ToDo quickstart app, then any `ACTION_INVOCATION` events (eg invoking the `complete()` action on a `ToDoItem`) should be routed through the webservice (and the href of the target of the event will appear in the console of the `soapsubscriberstub`) whereas any `OBJECT_CREATED`, `OBJECT_UPDATED` or `OBJECT_DELETED` events will be printed to the console of the `webconsole`.
 

@@ -11,7 +11,7 @@ public class ExamplePayloads {
     private ExamplePayloads() {}
 
     public static String _001 = fileContents("001-Action-ToDoItem#completed.json");
-    public static String _002 = fileContents("002-ChangedObject.json");
+    public static String _002 = fileContents("002-ObjectUpdated.json");
     public static String _003 = fileContents("003-Action-ToDoItem#notCompleted.json");
     
     public static String fileContents(String fileName) {

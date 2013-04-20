@@ -18,7 +18,9 @@ public class PublishedEvent implements Serializable {
 
 	public enum EventType {
 	    ACTION_INVOCATION,
-	    OBJECT_CHANGED
+	    OBJECT_CREATED,
+	    OBJECT_UPDATED,
+	    OBJECT_DELETED,
 	}
 	
 	@Id

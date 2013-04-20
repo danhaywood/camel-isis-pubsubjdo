@@ -44,7 +44,7 @@ public class IsisPubSubCanonicalizerTest_process {
     private PublishedEvent actionInvocationEvent;
     private String actionInvocationPayloadJson;
     
-    private PublishedEvent objectChangedEvent;
+    private PublishedEvent objectUpdatedEvent;
     private String objectChangedPayloadJson;
 
     private long now;
@@ -68,14 +68,14 @@ public class IsisPubSubCanonicalizerTest_process {
         
         actionInvocationPayloadJson = new JsonRepresentation(JsonUtil.asJsonNode(ExamplePayloads._001)).getMap("payload").toString();
 
-        objectChangedEvent = new PublishedEvent();
-        objectChangedEvent.setTransactionid("123");
-        objectChangedEvent.setSequence(1);
-        objectChangedEvent.setId("123-1");
-        objectChangedEvent.setEventType(EventType.OBJECT_CHANGED);
-        objectChangedEvent.setUser("fredbloggs");
+        objectUpdatedEvent = new PublishedEvent();
+        objectUpdatedEvent.setTransactionid("123");
+        objectUpdatedEvent.setSequence(1);
+        objectUpdatedEvent.setId("123-1");
+        objectUpdatedEvent.setEventType(EventType.OBJECT_UPDATED);
+        objectUpdatedEvent.setUser("fredbloggs");
         actionInvocationEvent.setTimestamp(now);
-        objectChangedEvent.setSerializedform(ExamplePayloads._002);
+        objectUpdatedEvent.setSerializedform(ExamplePayloads._002);
         
         objectChangedPayloadJson = new JsonRepresentation(JsonUtil.asJsonNode(ExamplePayloads._002)).getMap("payload").toString();
 
@@ -127,8 +127,8 @@ public class IsisPubSubCanonicalizerTest_process {
     }
 
     @Test
-    public void whenAnObjectChangedEvent() throws Exception {
-        message.setBody(objectChangedEvent);
+    public void whenAnObjectUpdatedEvent() throws Exception {
+        message.setBody(objectUpdatedEvent);
         canonicalizer.process(exchange);
         
         assertThat(exchange.hasOut(), is(false));
@@ -144,7 +144,7 @@ public class IsisPubSubCanonicalizerTest_process {
         assertThat(isisExtendedEventTypeObj instanceof String, is(true));
         String isisExtendedEventType = (String) isisExtendedEventTypeObj;
         
-        assertThat(isisExtendedEventType, is("OBJECT_CHANGED;dom.todo.ToDoItem"));
+        assertThat(isisExtendedEventType, is("OBJECT_UPDATED;dom.todo.ToDoItem"));
     }
 
 }

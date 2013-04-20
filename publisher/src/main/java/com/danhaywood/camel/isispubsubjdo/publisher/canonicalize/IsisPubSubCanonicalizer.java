@@ -28,7 +28,7 @@ import org.apache.isis.viewer.restfulobjects.applib.domainobjects.DomainObjectRe
  *      <li><tt>id</tt> - a String, the concatentation of <tt>transactionId</tt> and <tt>sequence</tt></li>
  *      <li><tt>transactionid</tt> - a String, representing the Isis transaction in which this event was published</li>
  *      <li><tt>sequence</tt> - an int, being the 0-based sequence number of this event within the transaction (when more than one event is published)</li>
- *      <li><tt>eventType</tt> - a string, either <tt>ACTION_INVOCATION</tt> or <tt>OBJECT_CHANGED</tt></li>
+ *      <li><tt>eventType</tt> - a string, either <tt>ACTION_INVOCATION</tt>, <tt>OBJECT_CREATED</tt>, <tt>OBJECT_UPDATED</tt> or <tt>OBJECT_DELETED</tt></li>
  *      <li><tt>timestamp</tt> - a long, the epoch-based timestamp that the event was original published</li>
  *      <li><tt>user</tt> - a string, an identifier of the user whose action caused the event to be published</li>
  *  </ul>
@@ -39,7 +39,9 @@ import org.apache.isis.viewer.restfulobjects.applib.domainobjects.DomainObjectRe
  *      <p>For example:</p>
  *      <ul>
  *      <li><tt>ACTION_INVOCATION;dom.todo.ToDoItem#completed()</tt></li>
- *      <li><tt>OBJECT_CHANGED;dom.todo.ToDoItem</tt></li>
+ *      <li><tt>OBJECT_CREATED;dom.todo.ToDoItem</tt></li>
+ *      <li><tt>OBJECT_UPDATED;dom.todo.ToDoItem</tt></li>
+ *      <li><tt>OBJECT_DELETED;dom.todo.ToDoItem</tt></li>
  *      </ul>
  *      <p>In most cases, it should be sufficient to look only at this header to route the event. 
  *  </li> 

@@ -3,12 +3,12 @@
       "id":"4575b7ad-4023-4279-aa71-1b67926b3d98.1",
       "transactionId":"4575b7ad-4023-4279-aa71-1b67926b3d98",
       "sequence":1,
-      "eventType" : "CHANGED_OBJECT",
+      "eventType" : "OBJECT_UPDATED",
       "user":"sven",
       "timestamp":1364901239824
    },
    "payload":{
-      "title":"CHANGED_OBJECT:dom.todo.ToDoItem@715be530",
+      "title":"OBJECT_UPDATED:dom.todo.ToDoItem@715be530",
       "members":[
          {
             "id":"changed",
